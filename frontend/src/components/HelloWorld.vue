@@ -1,24 +1,31 @@
 <template>
   <div>
+    <Heads></Heads>
     <el-row>
-      <el-col :span="12" >
+      <el-col :span="3">
         <h1>welcome！ </h1>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="12">
         <h2>还没想好做什么</h2>
+      </el-col>
+
+      <el-col :span="3">
+        <h2>抄来的todo-list</h2>
+        <TodoList></TodoList>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
+  import Heads from './Heads'
+  import TodoList from './TodoList'
 export default {
   name: 'HelloWorld',
+  components:{
+    Heads,
+    TodoList
+  },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
     }
   }
 }

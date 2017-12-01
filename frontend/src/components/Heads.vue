@@ -10,8 +10,9 @@
 
 </template>
 <script>
+
   export default {
-    name:'header',
+    name:'Heads',
     data(){
       return {
 
