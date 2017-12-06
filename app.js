@@ -4,6 +4,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var vs = require('./helpers/vsMiddleware')
+
+global.Promise = require('bluebird')
+Promise.promisifyAll(require("mysql/lib/Connection").prototype);
+Promise.promisifyAll(require("mysql/lib/Pool").prototype);
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -21,6 +26,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(vs)
 
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
