@@ -2,9 +2,9 @@
   <div>
     <header>
       <div class="center">
-
+        <div></div>
+        <div></div>
       </div>
-      <div></div>
     </header>
   </div>
 
@@ -29,12 +29,14 @@
     display: flex;
     flex-direction: row;
     height: 60px;
-    background-color: black;
+    background-color: #108ee9;
     margin: 0 0;
     align-items: center;
   }
   .center{
-    margin-left: 15%;
+    width: 840px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
 

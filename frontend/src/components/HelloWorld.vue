@@ -1,7 +1,6 @@
 <template>
 
   <div>
-    <Heads></Heads>
     <div id='main'>
       <article>
         <h2>抄来的todo-list</h2>
@@ -41,32 +40,6 @@ h1, h2 {
    margin-bottom: 0;
  }
 }
-.el-col {
-  border-radius: 4px;
-}
-.bg-purple-dark {
-  background: #99a9bf;
-}
-.bg-purple {
-  background: #d3dce6;
-}
-.bg-purple-light {
-  background: #e5e9f2;
-}
-.grid-content {
-  border-radius: 4px;
-  min-height: 36px;
-}
-.row-bg {
-  padding: 10px 0;
-  background-color: #f9fafc;
-}
-
-body {
-  font: 24px Helvetica;
-  background: #999999;
-}
-
 #main {
   min-height: 800px;
   margin: 0px;
@@ -98,7 +71,6 @@ body {
 #main > aside {
 
   padding: 5px;
-  background: #ccccff;
   -webkit-flex: 1 6 20%;
   flex: 1 6 20%;
   -webkit-order: 3;

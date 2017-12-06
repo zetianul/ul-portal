@@ -6,8 +6,7 @@ function vs(req,res,next) {
     if (ip.substr(0, 7) === '::ffff:') {
         ip = ip.substr(7);
     }
-    let item = new Date().getTime()
-    pool.queryAsync('insert into portal_event_stream (ip,`@timestamp`,label) value (?,?,?)',[ip,item,'visit']).then(ret => {
+    pool.queryAsync('insert into portal_event_stream (ip,label) value (?,?)',[ip,'visit']).then(ret => {
         console.log(ret.message)
     }).catch(err => {
         console.log(err.message)
