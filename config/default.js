@@ -6,6 +6,9 @@ let config = {
         user:'root',
         password:'19931116',
         database:'portal'
+    },
+    mongodb:{
+        url:'mongodb://localhost/portal'
     }
 }
 
