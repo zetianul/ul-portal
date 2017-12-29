@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 mongoose.Promise = require('bluebird')
 const pool = mysql.createPool(config.mysql)
 
-let conn = mongoose.createConnection(config.mongodb,{
+const conn = mongoose.createConnection(config.mongodb.url,{
     server: {
         socketOptions: {
             socketTimeoutMS: 300000,
