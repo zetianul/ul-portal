@@ -12,4 +12,7 @@ router.get('/vue', function(req, res, next) {
   res.sendFile(path.join(__dirname, '../public/vue.html'));
 });
 
+router.get('/wechat',function(req,res,next){
+  res.sendFile(path.join(__dirname,'../public/wechat.html'))
+})
 module.exports = router;
