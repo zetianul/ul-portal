@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.min.css">
+    <title>Document</title>
+    <link rel="stylesheet" href="./stylesheets/wechat.css">
+</head>
+<body>
+    <header>
+        <div style="display: inline-block;vertical-align: middle">
+            <img src="./images/support.png" alt="icon" class="icon">
+        </div>
+        <div style="display: inline-block;margin: 0.2em 0.2em;text-align: center">
+            <span>Mac Virtual Agent</span>
+        </div>     
+        
+    </header>
+    <section class="content">
+        <ul id="chatlist">
+            <li class="item row">
+                <div class="chat-user">
+                    <img src="./images/support.png" alt="icon" width="25px">
+                </div>
+                <div class="chat-text left">
+                    你好！我是马克为哎智能客服，请问你有什么问题？
+                </div>
+            </li>
+        </ul>
+    </section>
+    <!-- <div class="weui-footer weui-footer_fixed-bottom">
+        <p class="weui-footer__text" style="display: flex"><input type="text" id="content" style="width: 80%"><button onclick="submit()" style="background-color: green; border: 0px color">发送</button></p>
+      </div> -->
+      <div class="bottom">
+          <div style="width: 80%;padding: 0 15px;"><input type="text" placeholder="请输入您的问题"></div>
+          <div style="width: 20%"><button onclick="submit()">发送</button></div>        
+      </div>
+    <script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.min.js"></script>
+    <script>
+        document.querySelector('input').addEventListener('keydown',function(e){
+            if(e.keyCode === 13){
+                submit()
+            }
+        })
+        function submit(){
+            // console.log($('#content').val())
+            sendMessage($('input').val());
+        }
+        function scrollToBottom(){
+            let content = document.querySelector('.content')
+            // content.scrollTop = content.scrollHeight
+            $('.content').animate({scrollTop:content.scrollHeight},800)
+        }
+        function reply(text){
+            $('#chatlist').append(
+                `
+                <li class="item row">
+                    <div class="chat-user">
+                        <img src="./images/support.png" alt="icon" width="25px">
+                    </div>
+                    <div class="chat-text left">
+                        ${text}
+                    </div>
+                </li>
+                `
+            )
+            scrollToBottom()
+        }
+        function sendMessage(text){
+            $('#chatlist').append(
+                `
+                <li class="item reverse">   
+                    <div class="chat-user">
+                        <img src="./images/useravatar.png" alt="icon" width="25px">
+                    </div>            
+                    <div class="chat-text right">
+                        ${text}
+                    </div>
+                </li>
+                `
+            )
+            scrollToBottom()
+            $('input').val('')
+            // setTimeout("reply('现在还不能用')",1000)
+            $.ajax({
+                url:'/search',
+                type:'POST',
+                contentType:'application/json',
+                dataType:'json',
+                data:JSON.stringify({
+                    question:text
+                }),
+                success:function(data){
+                    if(typeof data === 'string'){
+                        reply(data)
+                    }else{
+                        var content = ''
+                        for(let key in data){
+                            content += `<a href="${data.key.url}">${data.key.title}</a><br>`
+                        }
+                        content.replace(/<br>$/,'')
+                        reply(content)
+                    }
+                },
+                error:function(err){
+                    console.log(err)
+                }
+            })            
+        }
+    </script>
+</body>
+</html>
