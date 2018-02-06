@@ -7,7 +7,7 @@ function vs(req,res,next) {
         ip = ip.substr(7);
     }
     pool.queryAsync('insert into portal_event_stream (ip,label,detail) value (?,?,?)',[ip,'visit',req.url]).then(ret => {
-        console.log(ret.message)
+        console.log('insert success')
     }).catch(err => {
         console.log(err.message)
     })
