@@ -2,7 +2,13 @@ var express = require('express');
 var router = express.Router();
 const path = require('path')
 const multer = require('multer')
-const upload = multer({dest:'public/upload/'}).fields([
+const storage = multer.diskStorage({
+  destination:'public/upload/',
+  filename:function(req,file,cb){
+    cb(null,file.originalname)
+  }
+})
+const upload = multer({storage:storage}).fields([
   {name:'file',maxCount:1}
 ])
 /* GET home page. */

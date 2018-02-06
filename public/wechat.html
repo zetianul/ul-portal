@@ -33,7 +33,7 @@
     <script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
     <script>
         $(function(){
-            let chatlog = JSON.parse(localStorage.getItem('chatlog'))
+            let chatlog = JSON.parse(localStorage.getItem('chatlog')) || {chatlist:[],modifytime:0}
             let time = Date.parse(new Date())
             if(time - chatlog.modifytime > 12*60*60*1000){
                 localStorage.removeItem('chatlog')
@@ -92,6 +92,7 @@
         }
         function setchatlog(message){
             let chatlog = JSON.parse(localStorage.getItem('chatlog')) || {chatlist:[],modifytime:0}
+            let list = chatlog.chatlist
             let now = Date.parse(new Date())
             if(list.length > 12){
                 list.shift()
