@@ -5,19 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdn.bootcss.com/weui/1.1.2/style/weui.min.css">
-    <!-- <link rel="stylesheet" href="https://cdn.bootcss.com/jquery-weui/1.2.0/css/jquery-weui.min.css"> -->
     <title>Mac Virtual Agent</title>
     <link rel="stylesheet" href="./stylesheets/wechat.css">
 </head>
 <body>
     <header>
-        <!-- <div style="display: inline-block;vertical-align: middle;text-align: center"> -->
-            <img src="./images/support.png" alt="icon" class="icon">
-        <!-- </div> -->
-        <!-- <div style="display: inline-block;margin: 0.2em 0.2em;text-align: center"> -->
-            <span>Mac Virtual Agent</span>
-        <!-- </div>      -->
-        
+        <img src="./images/support.png" alt="icon" class="icon">
+        <span>Mac Virtual Agent</span>
     </header>
     <section class="content">
         <ul id="chatlist">
@@ -31,33 +25,55 @@
             </li>
         </ul>
     </section>
-    <!-- <div class="weui-footer weui-footer_fixed-bottom">
-        <p class="weui-footer__text" style="display: flex"><input type="text" id="content" style="width: 80%"><button onclick="submit()" style="background-color: green; border: 0px color">发送</button></p>
-      </div> -->
       <footer>
-          <div style="width: 80%;padding: 0 15px;"><input type="text" placeholder="请输入您的问题"></div>
+          <div style="width: 80%;padding: 0 15px;"><input type="text" placeholder="请输入您的问题" onfocus="test()"></div>
           <div style="width: 20%"><button onclick="submit()">发送</button></div>        
       </footer>
+      <div id="test"></div>
     <script src="https://cdn.bootcss.com/jquery/1.11.0/jquery.min.js"></script>
-    <!-- <script src="https://cdn.bootcss.com/jquery-weui/1.2.0/js/jquery-weui.min.js"></script> -->
     <script>
+        $(function(){
+            let chatlog = JSON.parse(localStorage.getItem('chatlog'))
+            let time = Date.parse(new Date())
+            if(time - chatlog.modifytime > 12*60*60*1000){
+                localStorage.removeItem('chatlog')
+                return
+            }
+            for(let item of chatlog.list){
+                if(item.type === 'reply'){
+                    reply(item.content, true)
+                }else if(item.type === 'message'){
+                    sendMessage(item.content, true)
+                }
+            }
+            scrollToBottom()
+        })
         document.querySelector('input').addEventListener('keydown',function(e){
             if(e.keyCode === 13){
                 submit()
             }
         })
         function submit(){
-            // console.log($('#content').val())
-            if($('input').val()){
-                sendMessage($('input').val());
+            let text = $('input').val()
+            if(text){
+                sendMessage(text)
+                scrollToBottom()
+                request(text)
             }
         }
         function scrollToBottom(){
             let content = document.querySelector('.content')
-            // content.scrollTop = content.scrollHeight
-            $('.content').animate({scrollTop:content.scrollHeight},400)
+            $('.content').animate({scrollTop:content.scrollHeight},200)
         }
-        function reply(text){
+        function test(){
+            // let input = document.querySelector('input')
+            // content.scrollTop = content.scrollHeight
+            // $('input').animate({scrollTop:input.scrollHeight},200)
+            setTimeout(function(){
+                document.querySelector('#test').scrollIntoView(false)
+            },200)
+        }
+        function reply(text,flag){
             $('#chatlist').append(
                 `
                 <li class="item row">
@@ -70,9 +86,20 @@
                 </li>
                 `
             )
-            scrollToBottom()
+            if(!flag){
+                setchatlog({type:'reply',content:text})
+            }            
         }
-        function sendMessage(text){
+        function setchatlog(message){
+            let chatlog = JSON.parse(localStorage.getItem('chatlog')) || {chatlist:[],modifytime:0}
+            let now = Date.parse(new Date())
+            if(list.length > 12){
+                list.shift()
+            }
+            list.push(message)
+            localStorage.setItem('chatlog',JSON.stringify({chatlist:list,modifytime:now}))
+        }
+        function sendMessage(text,flag){
             $('#chatlist').append(
                 `
                 <li class="item reverse">   
@@ -85,9 +112,12 @@
                 </li>
                 `
             )
-            scrollToBottom()
+            if(!flag){
+                setchatlog({type:'message',content:text})
+            }     
+        }
+        function request(text){
             $('input').val('')
-            // setTimeout("reply('现在还不能用')",1000)
             $.ajax({
                 url:'/search',
                 type:'POST',
@@ -102,17 +132,18 @@
                     }else{
                         var content = ''
                         for(let key in data){
-                            content += `<a href="${data.key.url}">${data.key.title}</a><br>`
+                            content += `<a href="${data[key].url}">《${data[key].title}》</a><br>`
                         }
                         content.replace(/<br>$/,'')
                         reply(content)
+                        scrollToBottom()
                     }
                 },
                 error:function(err){
                     reply('不好意思，出现错误')
                     console.log(err)
                 }
-            })            
+            })      
         }
     </script>
 </body>
